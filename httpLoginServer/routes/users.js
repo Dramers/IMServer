@@ -60,6 +60,18 @@ router.post('/login', function (req, res, next) {
 	
 });
 
+router.post('/logout', function (req, res, next) {
+	UserModel.findOne({userId : req.body.userId}, function (err, doc) {
+		if (err) return next(err);
 
+		if (doc) {
+			// 删除信息
+			res.send(ErrorModel(0, 'success'));
+		}
+		else {
+			res.send(ErrorModel(3, 'user not exist'));
+		}
+	});
+});
 
 module.exports = router;
