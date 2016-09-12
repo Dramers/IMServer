@@ -1,0 +1,10 @@
+{
+  "name": "loginServer",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "socket.io": "~1.4.5",
+    "hashmap": "~2.0.6",
+    "mongoose": "~4.6.0"
+  }
+}

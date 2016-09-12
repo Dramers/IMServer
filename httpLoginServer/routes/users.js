@@ -1,10 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var mongoose = require('mongoose');
-var uri = 'mongodb://localhost/mongoose-shared-connection';
-mongoose.Promise = global.Promise;
-global.db = mongoose.createConnection(uri);
+
 
 var UserModel = require('../model/userModel');
 var ErrorModel = require('../model/errorModel');
