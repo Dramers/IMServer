@@ -27,13 +27,7 @@ function LoginClient() {
 	};
 
 	socket.on('register', function(data) {
-		var callback = tasks[data.taskId];
-		if (callback) {
-			var code = data.code;
-			var result = data.result;
-			callback({'code' : code, 'result' : result});
-			tasks[data.taskId] = null;
-		};
+		taskFinished(data);
 	});
 
 	this.login = function (username, password, callback) {
@@ -47,6 +41,23 @@ function LoginClient() {
 	};
 
 	socket.on('login', function(data) {
+		taskFinished(data);
+	});
+
+	this.searchBuddyKeyword = function (keyword, callback) {
+		tasks[taskId++] = callback;
+		socket.emit('searchUsersKeyword', {
+			'keyword' : keyword,
+			'taskId' : taskId-1
+		});
+	};
+
+	socket.on('searchUsersKeyword', function (data) {
+		taskFinished(data);
+	});
+
+	// task finished
+	function taskFinished(data) {
 		var callback = tasks[data.taskId];
 		if (callback) {
 			var code = data.code;
@@ -54,8 +65,7 @@ function LoginClient() {
 			callback({'code' : code, 'result' : result});
 			tasks[data.taskId] = null;
 		};
-		
-	});
+	}
 }
 
 module.exports = LoginClient;

@@ -23,4 +23,12 @@ router.post('/logout', function (req, res, next) {
 	next();
 });
 
+// buddys
+router.post('/searchBuddyKeyword', function (req, res, next) {
+
+	loginConn.searchBuddyKeyword(req.body.keyword, function (doc) {
+		res.send(doc);
+	});
+});
+
 module.exports = router;

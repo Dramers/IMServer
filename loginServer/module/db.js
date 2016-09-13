@@ -53,6 +53,16 @@ function DBManager() {
 		});
 
 	};
+
+	this.searchKeyword = function (keyword, callback) {
+
+		var qs = '/' + keyword + '/';
+		console.log('searchKeyword: ' + qs);
+		UserModel.find({'username': new RegExp(keyword)}, function (err, docs) {
+			console.log('searchKeyword finished: ' + docs.length);
+			callback(err, docs);
+		});
+	};
 }
 
 module.exports = DBManager;

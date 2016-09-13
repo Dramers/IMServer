@@ -19,6 +19,7 @@ function sendRes (client, taskId, result, emitName) {
 
 io.on('connection', function(client){
 
+	// login method
 	client.on('login', function (data) {
 		dbManager.findOne(null, data.username, function (err, doc) {
 			if (err) return sendError(client, data.taskId, err.message, 'login');
@@ -60,6 +61,16 @@ io.on('connection', function(client){
 
 	client.on('logout', function (data) {
 		console.log('logout' + data);
+	});
+
+	// buddys 
+	client.on('searchUsersKeyword', function (data) {
+		console.log('searchUsersKeyword: ' + data);
+		dbManager.searchKeyword(data.keyword, function (err, docs) {
+			if (err) { return sendError(client, data.taskId, err.message, 'searchUsersKeyword')};
+
+			sendRes(client, data.taskId, docs, 'searchUsersKeyword');
+		});
 	});
 });
 
