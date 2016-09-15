@@ -72,6 +72,68 @@ io.on('connection', function(client){
 			sendRes(client, data.taskId, docs, 'searchUsersKeyword');
 		});
 	});
+
+	client.on('queryBuddys', function (data) {
+		dbManager.findOne(data.userId, null, function (err, doc) {
+			if (err) sendError(client, data.taskId, err.message, 'queryBuddys');
+
+			if (!doc) sendError(client, data.taskId, 'user not exist', 'queryBuddys');
+
+			var buddys = [];
+			var searchCount = 0;
+			console.log('queryBuddys' + doc.buddyIds);
+			console.log('queryBuddys lentth: ' + doc.buddyIds.length);
+			if (doc.buddyIds.length == 0) { return sendRes(client, data.taskId, buddys, 'queryBuddys'); };
+
+			for (var i = doc.buddyIds.length - 1; i >= 0; i--) {
+				var buddyId = doc.buddyIds[i];
+				console.log('queryBuddys ' + buddyId);
+				dbManager.findOne(buddyId, null, function (err, subDoc) {
+					console.log('queryBuddys' + buddyId + ' ' + err);
+					if (subDoc) {
+						buddys.push(subDoc);
+					};
+					searchCount++;
+
+					if (searchCount == doc.buddyIds.length) {
+						sendRes(client, data.taskId, buddys, 'queryBuddys');
+					};
+				});
+			};
+		});
+	});
+
+	client.on('addBuddys', function (data) {
+		console.log('addBuddys' + data);
+		dbManager.findOne(data.userId, null, function (err, doc) {
+			if (err) sendError(client, data.taskId, err.message, 'addBuddys');
+
+			if (!doc) sendError(client, data.taskId, 'user not exist', 'addBuddys');
+
+			console.log('add buddys is111 ' + data.buddyIds);
+
+			for (var i = data.buddyIds.length - 1; i >= 0; i--) {
+				var needAddBuddyId = data.buddyIds[i]
+				console.log('add buddys is222 ' + needAddBuddyId);
+				var needAdd = true;
+				for (buddyId in doc.buddyIds) {
+					if (needAddBuddyId == buddyId) {
+						needAdd = false;
+						break;
+					}
+				}
+				if (needAdd) { doc.buddyIds.push(needAddBuddyId); }
+			};
+			
+			console.log('add buddys is ' + doc.buddyIds);
+
+			dbManager.update(doc, function (err, doc) {
+				if (err) { return sendError(client, data.taskId, err.message, 'addBuddys')};
+
+				sendRes(client, data.taskId, doc, 'addBuddys');
+			});
+		});
+	});
 });
 
 

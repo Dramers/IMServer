@@ -34,13 +34,17 @@ function DBManager() {
 			});
 
 			model.save(function (err, doc) {
-				if (err) return callback(err, doc);;
-
 				callback(err, doc);
 			});
 		});
 		
 	};
+
+	this.update = function (userModel, callback) {
+		userModel.save(function (err, doc) {
+			callback(err, doc);
+		});
+	}
 
 	this.findOne = function (userId, username, callback) {
 		var searchInfo = {};

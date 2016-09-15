@@ -44,6 +44,7 @@ function LoginClient() {
 		taskFinished(data);
 	});
 
+	// buddy
 	this.searchBuddyKeyword = function (keyword, callback) {
 		tasks[taskId++] = callback;
 		socket.emit('searchUsersKeyword', {
@@ -56,7 +57,33 @@ function LoginClient() {
 		taskFinished(data);
 	});
 
-	// task finished
+	this.addBuddys = function (userId, buddyIds, callback) {
+		sendTask('addBuddys', {
+			'userId' : userId,
+			'buddyIds' : buddyIds
+		}, callback);
+	};
+
+	// socket.on('addBuddys', function (data) {
+	// 	taskFinished(data);
+	// });
+
+	this.queryBuddys = function (userId, callback) {
+		sendTask('queryBuddys', {
+			'userId' : userId
+		}, callback);
+	};
+
+	// task method
+	function sendTask(eventName, data, callback) {
+		tasks[taskId++] = callback;
+		data['taskId'] = taskId-1;
+		socket.emit(eventName, data);
+		socket.once(eventName, function (data) {
+			taskFinished(data);
+		});
+	}
+
 	function taskFinished(data) {
 		var callback = tasks[data.taskId];
 		if (callback) {

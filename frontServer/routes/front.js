@@ -31,4 +31,18 @@ router.post('/searchBuddyKeyword', function (req, res, next) {
 	});
 });
 
+router.post('/addBuddys', function (req, res, next) {
+	console.log('addBUddys buddyIds: ' + req.body.buddyIds);
+	loginConn.addBuddys(req.body.userId, req.body.buddyIds, function (doc) {
+		res.send(doc);
+	});
+});
+
+router.post('/queryBuddys', function (req, res, next) {
+	console.log('1223');
+	loginConn.queryBuddys(req.body.userId, function (doc) {
+		res.send(doc);
+	});
+});
+
 module.exports = router;
