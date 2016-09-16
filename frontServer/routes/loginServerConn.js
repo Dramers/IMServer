@@ -23,11 +23,58 @@ function LoginClient() {
 
 	this.login = function (username, password, callback) {
 
-		sendTask('login', {
-			'username' : username,
-			'password' : password,
-		}, callback);
+		console.log('queryMsgServerAddress login'); 
+		this.queryMsgServerAddress(function (err, address) {
+			if (err) { return callback({'code' : 1, 'result' : err.message}); }
+
+			console.log('queryMsgServerAddress login begin'); 
+			sendTask('login', {
+				'username' : username,
+				'password' : password,
+			}, function (data) {
+	
+				var code = data.code;
+				var result = data.result;
+				if (code == 0) { result.msgServerAddress = address; };
+				
+				callback({'code' : code, 'result' : result});
+			});
+		});
+		
 	};
+
+	this.queryMsgServerAddress = function (callback) {
+		console.log('queryMsgServerAddress');
+		testMsgServerAddress(0, ['http://127.0.0.1:3005'], function (err, address) {
+			callback(err, address);
+		});
+	}
+
+	function testMsgServerAddress (index, addresses, callback) {
+		// body...
+		if (index >= addresses.length) { return callback(new Error('no free msgServer'), null)};
+
+		console.log('testMsgServerAddress ' + index + ' ' + addresses);
+		var address = addresses[index];
+		var msgConnect = io.connect(address);
+		msgConnect.on('connect', function() {
+			console.log('testMsgServerAddress connect');
+			msgConnect.emit('canConnect');
+
+			msgConnect.once('canConnect', function (data) {
+
+				console.log('testMsgServerAddress receive ' + data);
+				if (data) {
+					callback(null, address);
+				}
+				else {
+					testMsgServerAddress(index+1, addresses, callback);
+				}
+
+				msgConnect.close();
+			});
+		});
+	}
 
 	// buddy
 	this.searchBuddyKeyword = function (keyword, callback) {
