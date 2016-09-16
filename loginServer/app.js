@@ -116,12 +116,15 @@ io.on('connection', function(client){
 				var needAddBuddyId = data.buddyIds[i]
 				console.log('add buddys is222 ' + needAddBuddyId);
 				var needAdd = true;
-				for (buddyId in doc.buddyIds) {
+
+				for (var i = doc.buddyIds.length - 1; i >= 0; i--) {
+					var buddyId = doc.buddyIds[i]
 					if (needAddBuddyId == buddyId) {
 						needAdd = false;
 						break;
 					}
 				}
+
 				if (needAdd) { doc.buddyIds.push(needAddBuddyId); }
 			};
 			
@@ -131,6 +134,37 @@ io.on('connection', function(client){
 				if (err) { return sendError(client, data.taskId, err.message, 'addBuddys')};
 
 				sendRes(client, data.taskId, doc, 'addBuddys');
+			});
+		});
+	});
+
+	client.on('removeBuddys', function (data) {
+		console.log('removeBuddys' + data);
+		dbManager.findOne(data.userId, null, function (err, doc) {
+			if (err) sendError(client, data.taskId, err.message, 'removeBuddys');
+
+			if (!doc) sendError(client, data.taskId, 'user not exist', 'removeBuddys');
+
+			console.log('remove buddys is111 ' + data.buddyIds);
+
+			for (var i = data.buddyIds.length - 1; i >= 0; i--) {
+				var needAddBuddyId = data.buddyIds[i]
+				console.log('remove buddys is222 ' + needAddBuddyId);
+				for (var i = doc.buddyIds.length - 1; i >= 0; i--) {
+					var buddyId = doc.buddyIds[i]
+					if (needAddBuddyId == buddyId) {
+						doc.buddyIds.splice(i, 1);
+						break;
+					}
+				}
+			};
+			
+			console.log('remove buddys is ' + doc.buddyIds);
+
+			dbManager.update(doc, function (err, doc) {
+				if (err) { return sendError(client, data.taskId, err.message, 'removeBuddys')};
+
+				sendRes(client, data.taskId, doc, 'removeBuddys');
 			});
 		});
 	});

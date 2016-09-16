@@ -38,6 +38,13 @@ router.post('/addBuddys', function (req, res, next) {
 	});
 });
 
+router.post('/removeBuddys', function (req, res, next) {
+	console.log('removeBuddys buddyIds: ' + req.body.buddyIds);
+	loginConn.removeBuddys(req.body.userId, req.body.buddyIds, function (doc) {
+		res.send(doc);
+	});
+});
+
 router.post('/queryBuddys', function (req, res, next) {
 	console.log('1223');
 	loginConn.queryBuddys(req.body.userId, function (doc) {

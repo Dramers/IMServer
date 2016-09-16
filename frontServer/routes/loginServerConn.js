@@ -14,48 +14,27 @@ function LoginClient() {
 	});
 
 	this.register = function (name, username, password, callback){
-		tasks[taskId++] = callback;
-
-		socket.emit('register', {
+		sendTask('register', {
 			'name' : name, 
 			'username' : username,
 			'password' : password,
-			'taskId' : taskId-1
-		});
-
-
+		}, callback);
 	};
-
-	socket.on('register', function(data) {
-		taskFinished(data);
-	});
 
 	this.login = function (username, password, callback) {
-		tasks[taskId++] = callback;
 
-		socket.emit('login', {
+		sendTask('login', {
 			'username' : username,
 			'password' : password,
-			'taskId' : taskId-1
-		});
+		}, callback);
 	};
-
-	socket.on('login', function(data) {
-		taskFinished(data);
-	});
 
 	// buddy
 	this.searchBuddyKeyword = function (keyword, callback) {
-		tasks[taskId++] = callback;
-		socket.emit('searchUsersKeyword', {
+		sendTask('searchUsersKeyword', {
 			'keyword' : keyword,
-			'taskId' : taskId-1
-		});
+		}, callback);
 	};
-
-	socket.on('searchUsersKeyword', function (data) {
-		taskFinished(data);
-	});
 
 	this.addBuddys = function (userId, buddyIds, callback) {
 		sendTask('addBuddys', {
@@ -64,9 +43,12 @@ function LoginClient() {
 		}, callback);
 	};
 
-	// socket.on('addBuddys', function (data) {
-	// 	taskFinished(data);
-	// });
+	this.removeBuddys = function (userId, buddyIds, callback) {
+		sendTask('removeBuddys', {
+			'userId' : userId,
+			'buddyIds' : buddyIds
+		}, callback);
+	}
 
 	this.queryBuddys = function (userId, callback) {
 		sendTask('queryBuddys', {
