@@ -45,7 +45,7 @@ function LoginClient() {
 
 	this.queryMsgServerAddress = function (callback) {
 		console.log('queryMsgServerAddress');
-		testMsgServerAddress(0, ['http://127.0.0.1:3005'], function (err, address) {
+		testMsgServerAddress(0, ['http://192.168.1.8:3005'], function (err, address) {
 			callback(err, address);
 		});
 	}

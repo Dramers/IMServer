@@ -9,6 +9,14 @@ var maxClientCount = 1000;
 
 io.on('connection', function (client) {
 
+	console.log('connection ' + client);
+	client.on('disconnect', function () {
+		var key = clientInfos.search(client);
+		if (key) {
+			clientInfos.remove(key);
+		};
+	});
+
 	client.once('canConnect', function () {
 		if (clientInfos.count() < maxClientCount) { 
 			client.emit('canConnect', true)
@@ -19,13 +27,17 @@ io.on('connection', function (client) {
 	});
 
 	client.once('getUserId', function (data) {
-		var userId = data.userId;
+		var userId = data;
 
 		clientInfos.set(userId, client);
+		console.log('clientInfo set userId: ' + userId);
 
 		client.on('message', function (data) {
+
+			console.log('receive message data');
 			var fromUserId = data.fromUserId;
 			var toUserId = data.toUserId;
+			console.log('receive message data ' + fromUserId + ' ' + toUserId);
 
 			// save Msg
 			dbManager.addMsg(data, function (err, doc) {
@@ -37,8 +49,14 @@ io.on('connection', function (client) {
 					'status' : 2
 				});
 
+
 				var toClient = clientInfos.get(toUserId);
-				if (toClient) { toClient.emit('message', data)};
+				console.log('client: ' + toClient + ' toUserId: ' + toUserId);
+				if (toClient) { 
+					doc["sendDate"] = data.sendDate
+					toClient.emit('message', doc);
+					console.log('send client message');
+				};
 			});
 		});
 

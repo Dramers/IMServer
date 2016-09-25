@@ -10,4 +10,4 @@ var mySchema = Schema({
 	state : Number  // 1为服务器已收 2为对方已收 3为对方已读
 });
 
-module.exports = db.model('MsgModel', mySchema);
+module.exports = db.model('offlineMsgModel', mySchema);

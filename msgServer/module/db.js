@@ -6,13 +6,8 @@ function DBManager() {
 	global.db = mongoose.createConnection(uri);
 
 	var MsgModel = require('../model/MsgModel');
+	// var OfflineMsgModel = require('../model/offlineMsgModel');
 	var SessionModel = require('../model/SessionModel');
-
-	function newMsgId(callback) {
-		MsgModel.count(function(err, count) {
-			callback(err, count);
-		});
-	};
 
 	function newSessionId(callback) {
 		SessionModel.count(function(err, count) {
@@ -20,32 +15,24 @@ function DBManager() {
 		});
 	};
 
-	this.newMsgId = function(callback) {
-		newMsgId(callback);
-	};
-
 	this.addMsg = function (data, callback){
 
-		newMsgId(function (err, msgCount) {
-			if (err) return callback(err, doc);
-
-			var model = new MsgModel({
-				fromUserId : data.fromUserId,
-				toUserId : data.toUserId,
-				contentStr : data.contentStr,
-				serverReceiveDate : Date.now,
-				msgId : msgCount + 1,
-				msgContentType : data.msgContentType,
-				sessionId : data.sessionId,
-				state : 1
-			});
-
-			model.save(function (err, doc) {
-				callback(err, doc);
-			});
-			
+		var model = new MsgModel({
+			fromUserId : data.fromUserId,
+			toUserId : data.toUserId,
+			contentStr : data.contentStr,
+			serverReceiveDate : new Date(),
+			msgId : data.msgId,
+			msgContentType : data.msgContentType,
+			sessionId : data.sessionId,
+			state : 1
 		});
-		
+
+		model.save(function (err, doc) {
+			data.serverReceiveDate = new Date().getTime() / 1000;
+			data.state = 1;
+			callback(err, data);
+		});
 	};
 
 	this.updateMsgStatus = function (msgId, state, callback) {
