@@ -45,7 +45,7 @@ function LoginClient() {
 
 	this.queryMsgServerAddress = function (callback) {
 		console.log('queryMsgServerAddress');
-		testMsgServerAddress(0, ['http://192.168.1.8:3005'], function (err, address) {
+		testMsgServerAddress(0, ['http://192.168.1.3:3005'], function (err, address) {
 			callback(err, address);
 		});
 	}
@@ -99,6 +99,12 @@ function LoginClient() {
 
 	this.queryBuddys = function (userId, callback) {
 		sendTask('queryBuddys', {
+			'userId' : userId
+		}, callback);
+	};
+
+	this.queryUserInfo = function (userId, callback) {
+		sendTask('queryUserInfo', {
 			'userId' : userId
 		}, callback);
 	};

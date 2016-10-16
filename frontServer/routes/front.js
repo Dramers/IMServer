@@ -46,8 +46,15 @@ router.post('/removeBuddys', function (req, res, next) {
 });
 
 router.post('/queryBuddys', function (req, res, next) {
-	console.log('1223');
+	console.log('queryBuddys');
 	loginConn.queryBuddys(req.body.userId, function (doc) {
+		res.send(doc);
+	});
+});
+
+router.post('/queryUserInfo', function (req, res, next) {
+	console.log('queryUserInfo');
+	loginConn.queryUserInfo(req.body.userId, function (doc) {
 		res.send(doc);
 	});
 });

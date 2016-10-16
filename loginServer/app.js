@@ -103,6 +103,17 @@ io.on('connection', function(client){
 		});
 	});
 
+	client.on('queryUserInfo', function (data) {
+		console.log('queryUserInfo ' + data.userId);
+		dbManager.findOne(data.userId, null, function (err, doc) {
+			if (err) { return sendError(client, data.taskId, err.message, 'queryUserInfo')};
+
+			if (!doc) return sendError(client, data.taskId, 'user not exist', 'queryUserInfo');
+
+			sendRes(client, data.taskId, doc, 'queryUserInfo');
+		})
+	});
+
 	client.on('addBuddys', function (data) {
 		console.log('addBuddys' + data);
 		dbManager.findOne(data.userId, null, function (err, doc) {
@@ -168,6 +179,8 @@ io.on('connection', function(client){
 			});
 		});
 	});
+
+
 });
 
 
