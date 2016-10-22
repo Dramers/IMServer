@@ -2,6 +2,7 @@ var io = require('socket.io')();
 var HashMap = require('hashmap');
 var db = require('./module/db');
 var dbManager = new db();
+var fs = require('fs');
 
 var UserModel = require('./model/userModel');
 var ErrorModel = require('./model/errorModel');
@@ -185,5 +186,7 @@ io.on('connection', function(client){
 
 
 
-io.listen(3004);
-console.log('listening on 3004');
+var config = JSON.parse(fs.readFileSync('server.config', 'utf-8'));
+
+io.listen(Number(config["serverPort"]));
+console.log('listening on ' + Number(config["serverPort"]));
