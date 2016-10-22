@@ -85,7 +85,7 @@ io.on('connection', function (client) {
 	});
 });
 
-var config = JSON.parse(fs.readFileSync('msgServer.config', 'utf-8'));
+var config = JSON.parse(fs.readFileSync('server.config', 'utf-8'));
 
-io.listen(Number(config["msgServerPort"]));
-console.log('listening on ' + Number(config["msgServerPort"]));
+io.listen(Number(config["serverPort"]));
+console.log('listening on ' + Number(config["serverPort"]));

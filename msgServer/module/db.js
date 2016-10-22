@@ -1,7 +1,7 @@
 function DBManager() {
 
 	var fs = require('fs');
-	var config = JSON.parse(fs.readFileSync('msgServer.config', 'utf-8'));
+	var config = JSON.parse(fs.readFileSync('server.config', 'utf-8'));
 
 	var mongoose = require('mongoose');
 	var uri = config['db'];
