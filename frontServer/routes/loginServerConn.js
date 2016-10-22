@@ -1,6 +1,10 @@
 function LoginClient() {
 	var io = require('socket.io-client');
-	var socket = io.connect('http://127.0.0.1:3004');
+	var fs = require('fs');
+	var config = JSON.parse(fs.readFileSync('server.config', 'utf-8'));
+	var loginUrl = config['loginServers'][0];
+	console.log('connect loginserver ' + loginUrl);
+	var socket = io.connect(loginUrl);
 
 	var taskId = 0;
 	var tasks = {};
@@ -45,7 +49,7 @@ function LoginClient() {
 
 	this.queryMsgServerAddress = function (callback) {
 		console.log('queryMsgServerAddress');
-		testMsgServerAddress(0, ['http://192.168.1.3:3005'], function (err, address) {
+		testMsgServerAddress(0, config['msgServers'], function (err, address) {
 			callback(err, address);
 		});
 	}
