@@ -2,6 +2,7 @@ var io = require('socket.io')();
 var HashMap = require('hashmap');
 var db = require('./module/db');
 var dbManager = new db();
+var fs = require('fs');
 
 var clientInfos = new HashMap();
 
@@ -65,8 +66,26 @@ io.on('connection', function (client) {
 				if (err) console.log('messageStatus update error' + err);
 			});
 		});
+
+		client.on('createGroup', function (data) {
+
+		});
+
+		client.on('queryGroups', function (data) {
+			
+		});
+
+		client.on('updateGroupInfo', function (data) {
+			
+		});
+
+		client.on('deleteGroup', function (data) {
+			
+		});
 	});
 });
 
-io.listen(3005);
-console.log('listening on 3005');
+var config = JSON.parse(fs.readFileSync('msgServer.config', 'utf-8'));
+
+io.listen(Number(config["msgServerPort"]));
+console.log('listening on ' + Number(config["msgServerPort"]));

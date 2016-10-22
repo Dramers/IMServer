@@ -1,7 +1,10 @@
 function DBManager() {
 
+	var fs = require('fs');
+	var config = JSON.parse(fs.readFileSync('msgServer.config', 'utf-8'));
+
 	var mongoose = require('mongoose');
-	var uri = 'mongodb://localhost/mongoose-shared-connection';
+	var uri = config['db'];
 	mongoose.Promise = global.Promise;
 	global.db = mongoose.createConnection(uri);
 
