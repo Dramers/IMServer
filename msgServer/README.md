@@ -7,10 +7,8 @@
 标签：message
 输入：
 
-
-
   	{
-    		"userId" : 1
+      "userId" : 1
   	}
 
 ##GroupService
@@ -19,13 +17,10 @@
 
 输入
 
-​	{
-
-​		"groupName" ：“”，
-
-​		"userId" ：“”
-
-​	}
+    {
+      "groupName" ：“”，
+      "userId" ：“”
+    }
 
 ###获取群组列表
 
