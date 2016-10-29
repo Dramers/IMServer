@@ -5,6 +5,7 @@ var mySchema = Schema({
 	username : String,
 	password : String,
 	buddyIds : [Number],
+	groupIds : [String]
 });
 
 module.exports = db.model('UserModel', mySchema);
