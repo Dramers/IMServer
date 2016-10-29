@@ -1,5 +1,25 @@
 #msgServer
 
+##连接
+
+登录服务器在提供消息服务器之前,检测此消息服务器是否可用,用如下
+
+标签 : canConnect
+输入 : 无
+响应 : true of false
+
+**成功连接消息服务器之后,需要发送一次用户id,以便绑定用户,否则无法使用消息服务.** 
+如下:
+
+标签: getUserId
+输入
+
+	{
+		"userId" : 0,
+	}
+
+无响应
+
 ##MsgService
 
 ###发送消息
@@ -123,3 +143,16 @@
 | memberIds      | [int]  | 群成员Id数组（没有群主） | no   |
 | updateDate     | date   | 更新时间          | no   |
 | createDate     | date   | 创建时间          | no   |
+
+### MsgModel
+
+| 字段                | 类型     | 描述                    | 能否为空 |
+| :---------------- | :----- | --------------------- | ---- |
+| fromUserId        | int    | 发送用户Id                | no   |
+| toUserId          | int    | 到达用户Id                | no   |
+| contentStr        | string | 消息内容                  | no   |
+| serverReceiveDate | date   | 服务器接受时间               | no   |
+| msgId             | string | 消息Id                  | no   |
+| msgContentType    | int    | 消息类型                  | no   |
+| sessionId         | string | 为空则为单人会话，不为空就是群组Id    | yes  |
+| state             | int    | 1为服务器已收 2为对方已收 3为对方已读 | no   |
