@@ -1,0 +1,27 @@
+function GroupDBManager() {
+	var GroupModel = require('../model/GroupModel');
+	var uuid = require('node-uuid');  
+
+	this.add = function (data, callback) {
+		var uuidStr = uuid.v4();
+		var date = new Date();
+		console.log("create new group groupId is: " + uuidStr);
+		console.log("");
+
+		var model = new GroupModel({
+			groupId: uuid.v4(),
+			groupName: data.groupName,
+			groupHeadImage: data.groupHeadImage,
+			creator: data.creator,
+			memberIds: data.memberIds,
+			updateDate: date,
+			createDate: date,
+		});
+
+		model.save(function (err, doc) {
+			callback(err, doc);
+		});
+	}
+}
+
+module.exports = GroupDBManager;

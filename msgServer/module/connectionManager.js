@@ -1,10 +1,10 @@
 function ConnectionManager(maxClientCount) {
 
-	var db = require('./db');
-	var dbManager = new db();
-
 	var HashMap = require('hashmap');
 	var clientInfos = new HashMap();
+
+	var db = require('./msgdb');
+	var dbManager = new db();
 
 	var MsgService = require('./msgService');
 	var GroupService = require('./groupService');

@@ -10,13 +10,13 @@ function DBManager() {
 
 	var MsgModel = require('../model/MsgModel');
 	// var OfflineMsgModel = require('../model/offlineMsgModel');
-	var SessionModel = require('../model/SessionModel');
+	// var SessionModel = require('../model/SessionModel');
 
-	function newSessionId(callback) {
-		SessionModel.count(function(err, count) {
-			callback(err, count);
-		});
-	};
+	// function newSessionId(callback) {
+	// 	SessionModel.count(function(err, count) {
+	// 		callback(err, count);
+	// 	});
+	// };
 
 	this.addMsg = function (data, callback){
 

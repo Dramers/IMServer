@@ -139,7 +139,7 @@
 | groupId        | string | 群组Id          | no   |
 | groupName      | string | 群名            | no   |
 | groupHeadImage | string | 群头像           | yes  |
-| createor       | int    | 群主            | no   |
+| creator        | int    | 群主            | no   |
 | memberIds      | [int]  | 群成员Id数组（没有群主） | no   |
 | updateDate     | date   | 更新时间          | no   |
 | createDate     | date   | 创建时间          | no   |
