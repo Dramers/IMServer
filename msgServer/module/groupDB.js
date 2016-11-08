@@ -22,6 +22,12 @@ function GroupDBManager() {
 			callback(err, doc);
 		});
 	}
+
+	this.query = function (groupId, callback) {
+		GroupModel.findOne({"groupId" : groupId}, function (err, doc) {
+			callback(err, doc);
+		});
+	}
 }
 
 module.exports = GroupDBManager;
