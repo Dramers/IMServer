@@ -104,8 +104,7 @@
 		"groupId" : "",
 		"groupName" : "",
 		"groupHeadImage" : "",
-		"createor" : ""
-		"memberIds" : ["" , "", ...],
+		"creator" : "", // 群主
 	}
 
 响应
