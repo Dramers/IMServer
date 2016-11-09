@@ -106,6 +106,7 @@
 请求
 ​	
 	{
+		"userId" : "",
 		"groupId" : "",
 		"taskId" : "",
 		"memberIds" : ["", "", ...]
@@ -127,6 +128,7 @@
 请求
 ​	
 	{
+		"userId" : "",
 		"groupId" : "",
 		"memberIds" : ["", "", ...],
 		"taskId" : "",
