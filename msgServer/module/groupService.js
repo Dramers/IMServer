@@ -1,3 +1,18 @@
+/* 
+ * 删除数组中指定值 
+ */  
+Array.prototype.remove=function(value){    
+  var len = this.length;  
+  for(var i=0,n=0;i<len;i++){//把出了要删除的元素赋值给新数组    
+    if(this[i]!=value){    
+      this[n++]=this[i];  
+    }else{  
+      console.log(i);//测试所用  
+    }  
+  }    
+  this.length = n;  
+}; 
+
 function GroupService(client) {
 
 	var groupDB = require('./groupDB');
@@ -112,6 +127,28 @@ function GroupService(client) {
 				response.send(client, data.taskId, err, null, 'addGroupMembers');
 			}
 		}); 
+	});
+
+	client.on('kickGroupMembers', function (data) {
+		var groupId = data.groupId;
+		var userId = data.userId;
+		var memberIds = data.memberIds;
+
+		dbManager.query(groupId, function (err, doc) {
+			if (doc) {
+
+				for (memberId in memberIds) {
+					doc.memberIds.remove(memberId);
+				}
+
+				dbManager.update(doc, function (err, doc) {
+					response.send(client, data.taskId, err, null, 'kickGroupMembers');
+				});
+			}
+			else { 
+				response.send(client, data.taskId, err, null, 'kickGroupMembers');
+			}
+		});
 	});
 }
 
