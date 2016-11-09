@@ -94,6 +94,44 @@
 		}
 	}
 
+###添加群成员
+
+标签:addGroupMembers
+请求
+	
+	{
+		"groupId" : "",
+		"memberIds" : ["", "", ...]
+	}
+
+响应
+
+	{
+		"code" : 0,
+		"result" : {
+			
+		}
+	}
+
+###踢出群成员
+
+标签:kickGroupMembers
+请求
+	
+	{
+		"groupId" : "",
+		"memberIds" : ["", "", ...]
+	}
+
+响应
+
+	{
+		"code" : 0,
+		"result" : {
+			
+		}
+	}
+
 ###更新群信息
 
 标签:updateGroupInfo
