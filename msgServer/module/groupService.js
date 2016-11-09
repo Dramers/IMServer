@@ -94,6 +94,25 @@ function GroupService(client) {
 			response.send(client, data.taskId, err, doc, 'deleteGroup');
 		});
 	});
+
+	client.on('addGroupMembers', function (data) {
+		var groupId = data.groupId;
+		var userId = data.userId;
+		var memberIds = data.memberIds;
+
+		dbManager.query(groupId, function (err, doc) {
+			if (doc) {
+				doc.memberIds = memberIds;
+
+				dbManager.update(doc, function (err, doc) {
+					response.send(client, data.taskId, err, null, 'addGroupMembers');
+				});
+			}
+			else { 
+				response.send(client, data.taskId, err, null, 'addGroupMembers');
+			}
+		}); 
+	});
 }
 
 module.exports = GroupService;
