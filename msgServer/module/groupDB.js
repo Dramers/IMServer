@@ -32,6 +32,10 @@ function GroupDBManager() {
 	this.update = function (data, callback) {
 		data.save(callback);
 	}
+
+	this.deleteGroup = function (groupId, callback) {
+		GroupModel.remove({"groupId" : groupId}, callback);
+	}
 }
 
 module.exports = GroupDBManager;

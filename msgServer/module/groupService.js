@@ -87,7 +87,12 @@ function GroupService(client) {
 	});
 
 	client.on('deleteGroup', function (data) {
-		
+		var groupId = data.groupId;
+		var userId = data.userId;
+
+		dbManager.deleteGroup(groupId, function (err, doc) {
+			response.send(client, data.taskId, err, doc, 'deleteGroup');
+		});
 	});
 }
 
