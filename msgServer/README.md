@@ -44,6 +44,8 @@
 
 ##GroupService
 
+**注: taskId是用来标记本次响应是由哪次请求发出的，响应中的taskId就是请求中的taskId，由客户端自己生成.**
+
 ###创建群组
 
 标签:createGroup
@@ -54,12 +56,14 @@
       "userId" ："创建人Id",
       "memberIds" : "群成员Id数组",
       "groupHeadImage" : "群头像地址", // 暂时不支持，预留
+      "taskId" : "",
     }
 
 响应
 
 	{
 		"code" : 0,
+		"taskId" : "",
 		"result" : {
 			"groupId" : "群组Id"
 		}
@@ -71,13 +75,15 @@
 请求
 
 	{
-		"userId" : "用户Id"
+		"userId" : "用户Id",
+		"taskId" : "",
 	}
 
 响应
 
 	{
 		"code" : 0,
+		"taskId" : "",
 		"result" : {
 			[
 				{
@@ -98,9 +104,10 @@
 
 标签:addGroupMembers
 请求
-	
+​	
 	{
 		"groupId" : "",
+		"taskId" : "",
 		"memberIds" : ["", "", ...]
 	}
 
@@ -108,6 +115,7 @@
 
 	{
 		"code" : 0,
+		"taskId" : "",
 		"result" : {
 			
 		}
@@ -117,16 +125,18 @@
 
 标签:kickGroupMembers
 请求
-	
+​	
 	{
 		"groupId" : "",
-		"memberIds" : ["", "", ...]
+		"memberIds" : ["", "", ...],
+		"taskId" : "",
 	}
 
 响应
 
 	{
 		"code" : 0,
+		"taskId" : "",
 		"result" : {
 			
 		}
@@ -143,12 +153,14 @@
 		"groupName" : "",
 		"groupHeadImage" : "",
 		"creator" : "", // 群主
+		"taskId" : "",
 	}
 
 响应
 
 	{
 		"code" : 0
+		"taskId" : "",
 	}
 
 ###删除群
@@ -159,12 +171,14 @@
 	{
 		"userId" : "",
 		"groupId" : "",
+		"taskId" : "",
 	}
 
 响应
 
 	{
-		"code" : 0
+		"code" : 0,
+		"taskId" : "",
 	}
 
 ### GroupModel
