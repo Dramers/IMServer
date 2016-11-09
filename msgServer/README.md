@@ -156,3 +156,13 @@
 | msgContentType    | int    | 消息类型                  | no   |
 | sessionId         | string | 为空则为单人会话，不为空就是群组Id    | yes  |
 | state             | int    | 1为服务器已收 2为对方已收 3为对方已读 | no   |
+
+### GroupUserModel
+
+属性
+
+| 字段       | 类型       | 描述       | 能否为空 |
+| :------- | :------- | -------- | ---- |
+| userId   | int      | 人员Id     | no   |
+| groupIds | [string] | 所在群组Id数组 | yes  |
+
