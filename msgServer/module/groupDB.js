@@ -28,6 +28,10 @@ function GroupDBManager() {
 			callback(err, doc);
 		});
 	}
+
+	this.update = function (data, callback) {
+		data.save(callback);
+	}
 }
 
 module.exports = GroupDBManager;

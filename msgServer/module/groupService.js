@@ -64,6 +64,26 @@ function GroupService(client) {
 
 	client.on('updateGroupInfo', function (data) {
 		
+		var groupId = data.groupId;
+		var groupName = data.groupName;
+		var userId = data.userId;
+		var creator = data.creator;
+		var groupHeadImage = data.groupHeadImage;
+
+		dbManager.query(groupId, function (err, doc) {
+			if (doc) {
+				doc.groupName = groupName;
+				doc.creator = creator;
+				doc.groupHeadImage = groupHeadImage;
+
+				dbManager.update(doc, function (err, doc) {
+					response.send(client, data.taskId, err, doc, 'updateGroupInfo');
+				});
+			}
+			else {
+				response.send(client, data.taskId, err, doc, 'updateGroupInfo');
+			}
+		});
 	});
 
 	client.on('deleteGroup', function (data) {
