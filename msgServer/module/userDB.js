@@ -1,7 +1,7 @@
 function GroupUserDBManager() {
 	var GroupUserModel = require('../model/GroupUserModel');
 
-	this.add = function (data, callback) {
+	function addUser(data, callback) {
 		var model = new GroupUserModel({
 			userId : data.userId,
 			membersId : data.membersId,
@@ -12,6 +12,10 @@ function GroupUserDBManager() {
 		});
 	}
 
+	this.add = function (data, callback) {
+		addUser(data, callback)
+	}
+
 	this.query = function (userId, callback) {
 		
 		GroupUserModel.findOne({"userId" : userId}, function (err, doc) {
@@ -20,7 +24,7 @@ function GroupUserDBManager() {
 				callback(err, doc);
 			}
 			else {
-				this.add({"userId" : userId}, function (err, doc) {
+				addUser({"userId" : userId}, function (err, doc) {
 					callback(err, doc);
 				});
 			}
@@ -38,7 +42,7 @@ function GroupUserDBManager() {
 				});
 			}
 			else {
-				this.add(data, function (err, doc) {
+				addUser(data, function (err, doc) {
 					callback(err, doc);
 				});
 			}
@@ -63,4 +67,4 @@ function GroupUserDBManager() {
 	}
 }
 
-module.exports = GroupDBManager;
+module.exports = GroupUserDBManager;

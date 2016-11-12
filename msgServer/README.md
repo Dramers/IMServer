@@ -109,7 +109,7 @@
 		"userId" : "",
 		"groupId" : "",
 		"taskId" : "",
-		"memberIds" : ["", "", ...]
+		"memberIds" : [ 1, 2, ...]
 	}
 
 响应

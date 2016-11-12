@@ -52,12 +52,15 @@ function GroupService(client) {
 		// 通知其他人
 	});
 
-	client.on('queryGroups', function (data) {
+	client.on('queryGroupList', function (data) {
+
+		console.log('queryGroups user: ' + data.userId);
+
 		userDB.query(data.userId, function (err, groupUserModel) {
 			var groupIds = groupUserModel.groupIds;
-
+			console.log('queryGroups query user' );
 			if (groupIds.length == 0) {
-				return response.send(client, data.taskId, null, [], 'createGroup');
+				return response.send(client, data.taskId, null, [], 'queryGroupList');
 			}
 
 			var groups = [];
@@ -70,7 +73,7 @@ function GroupService(client) {
 					}
 
 					if (count == groupIds.length) {
-						response.send(client, data.taskId, null, groups, 'queryGroups');
+						response.send(client, data.taskId, null, groups, 'queryGroupList');
 					}
 				});
 			}
