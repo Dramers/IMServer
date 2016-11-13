@@ -25,7 +25,7 @@ function GroupService(client) {
 	var userDB = new GroupUserDB();
 
 	client.on('createGroup', function (data) {
-		// console.log(.)
+		console.log('createGroup' + data.userId);
 		var groupName = data.groupName;
 		var userId = data.userId;
 		var memberIds = data.memberIds;
@@ -57,16 +57,29 @@ function GroupService(client) {
 		console.log('queryGroups user: ' + data.userId);
 
 		userDB.query(data.userId, function (err, groupUserModel) {
+			// console.log()
+
+			if (err) { return response.send(client, data.taskId, err, null, 'queryGroupList'); };
+
 			var groupIds = groupUserModel.groupIds;
-			console.log('queryGroups query user' );
+			console.log('queryGroups query user groupIds count: ' + groupIds.length );
+
+
 			if (groupIds.length == 0) {
 				return response.send(client, data.taskId, null, [], 'queryGroupList');
 			}
 
 			var groups = [];
 			var count = 0;
-			for (groupId in groupIds) {
+
+			console.log('===========' + groupIds);
+
+			for (var i = 0; i < groupIds.length; i++) {
+				var groupId = groupIds[i];
+				console.log('queryGroups query group Id: ' + groupId );
 				dbManager.query(groupId, function (err, doc) {
+
+					console.log('queryGroups query group: ' + doc );
 					count++;
 					if (doc) {
 						groups.push(doc);

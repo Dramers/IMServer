@@ -4,11 +4,29 @@ function GroupUserDBManager() {
 	function addUser(data, callback) {
 		var model = new GroupUserModel({
 			userId : data.userId,
-			membersId : data.membersId,
+			groupIds : data.groupIds,
 		});
 
 		model.save(function (err, doc) {
 			callback(err, doc);
+		});
+	}
+
+	function updateUser (data, callback) {
+		GroupUserModel.findOne({"userId" : data.userId}, function (err, doc) {
+
+			if (doc) {
+				doc.groupIds = data.groupIds;
+				doc.save(function (err, doc) {
+					callback(err, doc);
+				});
+			}
+			else {
+				addUser(data, function (err, doc) {
+					callback(err, doc);
+				});
+			}
+			
 		});
 	}
 
@@ -33,36 +51,27 @@ function GroupUserDBManager() {
 	}
 
 	this.update = function (data, callback) {
-		GroupUserModel.findOne({"userId" : userId}, function (err, doc) {
-
-			if (doc) {
-				doc.membersId = data.membersId;
-				doc.save(function (err, doc) {
-					callback(err, doc);
-				});
-			}
-			else {
-				addUser(data, function (err, doc) {
-					callback(err, doc);
-				});
-			}
-			
-		});
+		updateUser(data, callback);
 	}
 
 	this.joinGroup = function (userId, groupId, callback) {
-		this.query(userId, function (err, doc) {
-			var groupIds = doc.groupIds;
-			if (groupIds) {
+
+		GroupUserModel.findOne({"userId" : userId}, function (err, doc) {
+ 
+			if (doc) {
+				var groupIds = doc.groupIds;
+				if (groupIds == null) {
+					groupIds = []; 
+				}
+
 				groupIds.push(groupId);
+				doc.groupIds = groupIds;
+				updateUser(doc, callback);
 			}
 			else {
-				groupIds = [];
+				callback(err, doc);
 			}
-
-			groupIds.push(groupId);
-			doc.groupIds = groupIds;
-			this.update(doc, callback);
+			
 		});
 	}
 }

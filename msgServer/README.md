@@ -90,7 +90,7 @@
 					"groupId" : "",
 					"groupName" : "",
 					"groupHeadImage" : "",
-					"createor" : ""
+					"creator" : ""
 					"memberIds" : ["" , "", ...],
 					"updateDate" : 时间戳,
 					"createDate" : 时间戳

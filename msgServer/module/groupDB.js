@@ -6,7 +6,7 @@ function GroupDBManager() {
 		var uuidStr = uuid.v4();
 		var date = new Date();
 		console.log("create new group groupId is: " + uuidStr);
-		console.log("");
+		console.log("date: " + date + " " + data.creator + "time: " + date.getTime()/1000);
 
 		var model = new GroupModel({
 			groupId: uuid.v4(),
@@ -14,8 +14,8 @@ function GroupDBManager() {
 			groupHeadImage: data.groupHeadImage,
 			creator: data.creator,
 			memberIds: data.memberIds,
-			updateDate: date,
-			createDate: date,
+			updateDate: date.getTime()/1000, 
+			createDate: date.getTime()/1000,
 		});
 
 		model.save(function (err, doc) {
@@ -30,6 +30,8 @@ function GroupDBManager() {
 	}
 
 	this.update = function (data, callback) {
+		var date = new Date();
+		data.updateDate = date.getTime()/1000;
 		data.save(callback);
 	}
 
