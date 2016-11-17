@@ -2,6 +2,7 @@ function ConnectionManager(maxClientCount) {
 
 	var HashMap = require('hashmap');
 	var clientInfos = new HashMap();
+	global.clientInfos = clientInfos;
 
 	var db = require('./msgdb');
 	var dbManager = new db();
