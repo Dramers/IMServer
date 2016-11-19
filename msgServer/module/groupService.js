@@ -93,6 +93,14 @@ function GroupService(client) {
 		});
 	});
 
+	client.on('queryGroupInfo', function (data) {
+		var groupId = data.groupId;
+
+		dbManager.query(groupId, function (err, doc) {
+			response.send(client, data.taskId, err, doc, 'queryGroupInfo');
+		});
+	});
+
 	client.on('updateGroupInfo', function (data) {
 		
 		var groupId = data.groupId;
@@ -131,9 +139,27 @@ function GroupService(client) {
 		var userId = data.userId;
 		var memberIds = data.memberIds;
 
+		console.log('addGroupMembers: ' + memberIds);
 		dbManager.query(groupId, function (err, doc) {
 			if (doc) {
-				doc.memberIds = memberIds;
+
+				// 去重
+				var newMembers = doc.memberIds;
+				for (var i = memberIds.length - 1; i >= 0; i--) {
+					var newID = memberIds[i]; 
+					var have = false;
+					for (var j = doc.memberIds.length - 1; j >= 0; j--) {
+						if (doc.memberIds[j] == newID) {
+							have = true;
+							break;
+						};
+					};
+
+					if (have == false) {
+						
+						newMembers.push(newID);
+					};
+				};
 
 				dbManager.update(doc, function (err, doc) {
 					response.send(client, data.taskId, err, null, 'addGroupMembers');
@@ -149,12 +175,11 @@ function GroupService(client) {
 		var groupId = data.groupId;
 		var userId = data.userId;
 		var memberIds = data.memberIds;
-
+		console.log('kickGroupMembers: ' + memberIds);
 		dbManager.query(groupId, function (err, doc) {
 			if (doc) {
-
-				for (memberId in memberIds) {
-					doc.memberIds.remove(memberId);
+				for (var i = memberIds.length - 1; i >= 0; i--) {
+					doc.memberIds.remove(memberIds[i]);
 				}
 
 				dbManager.update(doc, function (err, doc) {

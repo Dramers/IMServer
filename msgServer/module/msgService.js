@@ -44,7 +44,6 @@ function MsgService(client) {
 					for (var i = memberIds.length - 1; i >= 0; i--) {
 						var userId = memberIds[i];
 						
-
 						if (userId != fromUserId) {
 							sendMessage(userId, doc);
 						};

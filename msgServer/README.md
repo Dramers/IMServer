@@ -46,6 +46,8 @@
 
 **注: taskId是用来标记本次响应是由哪次请求发出的，响应中的taskId就是请求中的taskId，由客户端自己生成.**
 
+**注: 群组的memberIds中提交的时候需要包含自己的userId
+
 ###创建群组
 
 标签:createGroup
@@ -141,6 +143,34 @@
 		"taskId" : "",
 		"result" : {
 			
+		}
+	}
+
+###获取群信息
+
+标签:queryGroupInfo
+请求
+
+	{
+		"userId" : "",
+		"groupId" : "",
+		"taskId" : "",
+	}
+
+响应
+
+	{
+		"code" : 0,
+		"taskId" : "",
+		"result" : {
+					"groupId" : "",
+					"groupName" : "",
+					"groupHeadImage" : "",
+					"creator" : ""
+					"memberIds" : ["" , "", ...],
+					"updateDate" : 时间戳,
+					"createDate" : 时间戳
+				}
 		}
 	}
 
