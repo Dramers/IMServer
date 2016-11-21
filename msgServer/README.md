@@ -46,7 +46,7 @@
 
 **注: taskId是用来标记本次响应是由哪次请求发出的，响应中的taskId就是请求中的taskId，由客户端自己生成.**
 
-**注: 群组的memberIds中提交的时候需要包含自己的userId
+**注: 群组的memberIds中提交的时候需要包含自己的userId**
 
 ###创建群组
 

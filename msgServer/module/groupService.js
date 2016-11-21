@@ -116,11 +116,11 @@ function GroupService(client) {
 				doc.groupHeadImage = groupHeadImage;
 
 				dbManager.update(doc, function (err, doc) {
-					response.send(client, data.taskId, err, doc, 'updateGroupInfo');
+					response.send(client, data.taskId, err, null, 'updateGroupInfo');
 				});
 			}
 			else {
-				response.send(client, data.taskId, err, doc, 'updateGroupInfo');
+				response.send(client, data.taskId, err, null, 'updateGroupInfo');
 			}
 		});
 	});
@@ -129,15 +129,60 @@ function GroupService(client) {
 		var groupId = data.groupId;
 		var userId = data.userId;
 
-		dbManager.deleteGroup(groupId, function (err, doc) {
-			response.send(client, data.taskId, err, doc, 'deleteGroup');
+		dbManager.query(groupId, function(err, doc) {
+
+			if (doc) {
+				var members = doc.memberIds;
+
+				if (members.length ) {
+					dbManager.deleteGroup(groupId, function (err, doc) {
+						response.send(client, data.taskId, err, null, 'deleteGroup');
+					});
+				};
+
+				for (var i = members.length - 1; i >= 0; i--) {
+					var memberId = members[i];
+					var queryCount = 0;
+					userDB.query(memberId, function (err, doc) {
+						queryCount++;
+						if (doc) {
+							doc.groupIds.remove(groupId);
+							userDB.update(doc, function	(err, doc) {});
+						}
+
+						if (queryCount == members.length) {
+							dbManager.deleteGroup(groupId, function (err, doc) {
+								response.send(client, data.taskId, err, null, 'deleteGroup');
+							});
+						};
+					});
+
+				};
+			}
+			else {
+				response.send(client, data.taskId, err, null, 'deleteGroup');
+			}
+			
 		});
+
+		
 	});
 
 	client.on('addGroupMembers', function (data) {
 		var groupId = data.groupId;
 		var userId = data.userId;
 		var memberIds = data.memberIds;
+
+		for (var i = memberIds.length - 1; i >= 0; i--) {
+			var userId = memberIds[i];
+			userDB.query(userId, function (err, doc) {
+				if (doc) {
+					doc.groupIds.remove(groupId);
+					doc.groupIds.push(groupId);
+					userDB.update(doc, function	(err, doc) {});
+				};
+			});
+		};
 
 		console.log('addGroupMembers: ' + memberIds);
 		dbManager.query(groupId, function (err, doc) {
@@ -175,6 +220,17 @@ function GroupService(client) {
 		var groupId = data.groupId;
 		var userId = data.userId;
 		var memberIds = data.memberIds;
+
+		for (var i = memberIds.length - 1; i >= 0; i--) {
+			var userId = memberIds[i];
+			userDB.query(userId, function (err, doc) {
+				if (doc) {
+					doc.groupIds.remove(groupId);
+					userDB.update(doc, function	(err, doc) {});
+				};
+			});
+		};
+
 		console.log('kickGroupMembers: ' + memberIds);
 		dbManager.query(groupId, function (err, doc) {
 			if (doc) {

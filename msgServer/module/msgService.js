@@ -13,7 +13,7 @@ function MsgService(client) {
 		var toClient = clientInfos.get(toUserId);
 		console.log(' sendMessage: ' + toClient + ' toUserId: ' + toUserId + ' Content: ' + message.contentStr);
 		if (toClient) { 
-			message["sendDate"] = data.sendDate;
+			message["sendDate"] = message.sendDate;
 			toClient.emit('message', message);
 		};
 	}
@@ -45,14 +45,14 @@ function MsgService(client) {
 						var userId = memberIds[i];
 						
 						if (userId != fromUserId) {
-							sendMessage(userId, doc);
+							sendMessage(userId, data);
 						};
 					};
 				});
 			}
 			else {
 				// 个人消息
-				sendMessage(data.toUserId, doc);
+				sendMessage(data.toUserId, data);
 			}
 		});
 	});
