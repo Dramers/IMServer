@@ -145,7 +145,7 @@ io.on('connection', function(client){
 			dbManager.update(doc, function (err, doc) {
 				if (err) { return sendError(client, data.taskId, err.message, 'addBuddys')};
 
-				sendRes(client, data.taskId, doc, 'addBuddys');
+				sendRes(client, data.taskId, null, 'addBuddys');
 			});
 		});
 	});
@@ -176,7 +176,7 @@ io.on('connection', function(client){
 			dbManager.update(doc, function (err, doc) {
 				if (err) { return sendError(client, data.taskId, err.message, 'removeBuddys')};
 
-				sendRes(client, data.taskId, doc, 'removeBuddys');
+				sendRes(client, data.taskId, null, 'removeBuddys');
 			});
 		});
 	});
