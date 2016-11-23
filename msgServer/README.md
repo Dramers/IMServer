@@ -1,5 +1,7 @@
 #msgServer
 
+**注: taskId是用来标记本次响应是由哪次请求发出的，响应中的taskId就是请求中的taskId，由客户端自己生成.**
+
 ##连接
 
 登录服务器在提供消息服务器之前,检测此消息服务器是否可用,用如下
@@ -42,11 +44,68 @@
 
 响应 : 无
 
-##Msg Response Service
+###获取离线消息
+
+标签: queryOffineMessage
+输入:
+
+	{
+		"userId" : "",
+		"taskId" : ""
+	}
+
+响应:
+
+	{
+		"code" : 0
+		"taskId" : "",
+		"result" : [
+			{
+		      "fromUserId" : 1,
+		      "toUserId" : 2,
+		      "contentStr" : "",
+		      "msgId" : "",
+		      "sendDate" : 时间戳,
+		      "msgContentType" : "",
+		      "sessionId" : "",
+		    },
+		    {
+		      "fromUserId" : 1,
+		      "toUserId" : 2,
+		      "contentStr" : "",
+		      "msgId" : "",
+		      "sendDate" : 时间戳,
+		      "msgContentType" : "",
+		      "sessionId" : "",
+		    },
+		    ...
+		]
+	}
+
+###获取某条消息
+
+标签:queryMessageInfo
+输入:
+
+	{
+		"userId" : "",
+		"taskId" : "",
+		"msgId" : ""
+	}
+
+响应:
+	
+	{
+      	"fromUserId" : 1,
+      	"toUserId" : 2,
+      	"contentStr" : "",
+      	"msgId" : "",
+      	"sendDate" : 时间戳,
+      	"msgContentType" : "",
+      	"sessionId" : "",
+    }
 
 ##GroupService
-
-**注: taskId是用来标记本次响应是由哪次请求发出的，响应中的taskId就是请求中的taskId，由客户端自己生成.**
 
 **注: 群组的memberIds中提交的时候需要包含自己的userId**
 
