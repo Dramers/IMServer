@@ -98,6 +98,7 @@ function GroupService(client) {
 
 		dbManager.query(groupId, function (err, doc) {
 			response.send(client, data.taskId, err, doc, 'queryGroupInfo');
+			
 		});
 	});
 

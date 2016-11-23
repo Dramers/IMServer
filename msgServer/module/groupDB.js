@@ -25,6 +25,11 @@ function GroupDBManager() {
 
 	this.query = function (groupId, callback) {
 		GroupModel.findOne({"groupId" : groupId}, function (err, doc) {
+
+			if (err == null && doc == null) {
+				err = "group not exist";
+			};
+
 			callback(err, doc);
 		});
 	}
