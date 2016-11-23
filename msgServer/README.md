@@ -42,6 +42,8 @@
 
 响应 : 无
 
+##Msg Response Service
+
 ##GroupService
 
 **注: taskId是用来标记本次响应是由哪次请求发出的，响应中的taskId就是请求中的taskId，由客户端自己生成.**
@@ -213,6 +215,72 @@
 		"taskId" : "",
 	}
 
+##Group Response Service
+
+###群被删除通知
+
+标签:deleteGroupNoti
+数据:
+
+	{
+		"groupId" : "",
+	}
+
+###群创建通知
+
+标签:createGroupNoti
+数据:
+
+	{
+		"groupId" : "",
+		"groupName" : "",
+		"groupHeadImage" : "",
+		"creator" : ""
+		"memberIds" : ["" , "", ...],
+		"updateDate" : 秒时间戳,
+		"createDate" : 秒时间戳
+	}
+
+###群成员添加通知
+
+标签:groupMembersAddNoti
+数据:
+
+	{
+		"groupId" : "",
+		"memberIds" : ["" , "", ...],
+	}
+
+**注意: memberIds里只有添加的人Id**
+
+###群成员删除通知
+
+标签:groupMembersDelNoti
+数据:
+
+	{
+		"groupId" : "",
+		"memberIds" : ["" , "", ...],
+	}
+
+**注意: memberIds里只有将要的人Id, 如果里面有自己的Id, 则本人就是被踢出了群**
+
+###群信息变更通知
+
+标签: groupInfoUpdateNoti
+数据:
+
+	{
+		"groupId" : "",
+		"groupName" : "",
+		"groupHeadImage" : "",
+		"creator" : ""
+		"memberIds" : ["" , "", ...],
+		"updateDate" : 秒时间戳,
+		"createDate" : 秒时间戳
+	}
+
+##数据结构
 ### GroupModel
 
 属性
@@ -249,3 +317,7 @@
 | userId   | int      | 人员Id     | no   |
 | groupIds | [string] | 所在群组Id数组 | yes  |
 
+### OfflineMsgModel
+| 字段                | 类型     | 描述                    | 能否为空 |
+| :---------------- | :----- | --------------------- | ---- |
+| msgId             | string | 消息Id                  | no   |
