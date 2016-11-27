@@ -88,8 +88,10 @@ function MsgService(client) {
 	});
 
 	client.on('queryOffineMessage', function (data) {
+		console.log('queryOffline Message1');
 		offlineMsgDB.query(data.userId, function (err, doc) {
 
+			console.log('queryOffline Message');
 			if (err) {
 				response.send(client, data.taskId, err, doc, 'queryOffineMessage');
 				return;
@@ -105,7 +107,8 @@ function MsgService(client) {
 
 				// 消息的离线
 				if (offlineMsg.labelName == 'message') {
-					var message = JSON.parse(offlineMsg.content);
+					var message = offlineMsg.content;
+					console.log('queryOffline Message content: ' + message);
 					if (message.sessionId != null) {
 						sendMessageState(fromUserId, message.msgId, 2);
 					}

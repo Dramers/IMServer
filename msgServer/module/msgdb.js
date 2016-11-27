@@ -31,17 +31,20 @@ function DBManager() {
 	};
 
 	this.updateMsgStatus = function (msgId, state, callback) {
-		MsgModel.fineOne({ 'msgId' : msgId}, function (err, doc) {
-			if (err) { return callback(err, doc)};
+		console.log('msgId: ' + msgId + ' state: ' + state + ' callback: ' + callback);
+		MsgModel.findOne({"msgId" : msgId}, function (err, doc) {
+			if (err) { 
+				return callback(err, doc);
+			};
 
 			doc.state = state;
-			model.save(callback);
+			doc.save(callback);
 		});
-	}
+	};
 
 	this.queryOneMsg = function (msgId, callback) {
-		MsgModel.fineOne({'msgId' : msgId}, callback);
-	}
+		MsgModel.findOne({'msgId' : msgId}, callback);
+	};
 }
 
 module.exports = DBManager;

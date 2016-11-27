@@ -10,7 +10,7 @@ var OfflineMsgModel = db.model('OfflineMsgModel', mySchema);
 function OfflineMsgModelDB() {
 
 	this.add = function (labelName, userId, content, callback) {
-		var jsonStr = content.toJSONString();
+		var jsonStr = JSON.stringify(content);
 		var contentStr = content;
 
 		if (jsonStr) {
@@ -39,19 +39,31 @@ function OfflineMsgModelDB() {
 	}
 
 	this.query = function (userId, callback) {
-		OfflineMsgModel.fine({"userId" : userId}, function (err, docs) {
+		OfflineMsgModel.find({"userId" : userId}, function (err, docs) {
 
+			var newModels = [];
 			if (err == null && docs != null) {
+				
 				for (var i = docs.length - 1; i >= 0; i--) {
 					var offlineMsg = docs[i];
 					var obj = JSON.parse(offlineMsg.content);
-					if (obj) {
-						offlineMsg.content = obj;
+					console.log('Offline Message query obj : ' + obj);
+
+					var newMsg = {
+						"labelName" : offlineMsg.labelName,
 					}
+					if (obj) {
+						newMsg.content = obj;
+						console.log('set obj : ' + offlineMsg.content);
+					}
+					else {
+						newMsg.content = offlineMsg.content;
+					}
+					newModels.push(newMsg);
 				}
 			};
 
-			callback(err, docs);
+			callback(err, newModels);
 		});
 	}
 }
