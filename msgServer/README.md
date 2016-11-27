@@ -321,6 +321,7 @@
 	{
 		"groupId" : "",
 		"memberIds" : ["" , "", ...],
+		"userId" : "" // 操作者
 	}
 
 **注意: memberIds里只有添加的人Id**
@@ -333,6 +334,7 @@
 	{
 		"groupId" : "",
 		"memberIds" : ["" , "", ...],
+		"userId" : "" // 操作者
 	}
 
 **注意: memberIds里只有将要的人Id, 如果里面有自己的Id, 则本人就是被踢出了群**

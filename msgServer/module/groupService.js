@@ -247,7 +247,8 @@ function GroupService(client) {
 							var memberId = oldMembers[i];
 							sendGroupNoti('groupMembersAddNoti', {
 								"groupId" : groupId, 
-								"memberIds" : addMembers
+								"memberIds" : addMembers,
+								"userId" : userId
 							}, memberId);
 						};
 					};
@@ -290,7 +291,8 @@ function GroupService(client) {
 							var memberId = doc.memberIds[i];
 							sendGroupNoti('groupMembersDelNoti', {
 								"groupId" : groupId, 
-								"memberIds" : memberIds
+								"memberIds" : memberIds,
+								"userId" : userId
 							}, memberId);
 						};
 					};
