@@ -27,6 +27,13 @@ function GroupService(client) {
 	var OfflineMsgDB = require('../model/OfflineMsgModel');
 	var offlineMsgDB = new OfflineMsgDB();
 
+	function sendGroupNotiMemerIds(labelName, message, userIds) {
+		for (var i = userIds.length - 1; i >= 0; i--) {
+			var userId = userIds[i];
+			sendGroupNoti(labelName, message, userId);
+		};
+	}
+
 	function sendGroupNoti(labelName, message, toUserId) {
 		var toClient = clientInfos.get(toUserId);
 		console.log(' sendGroupNoti: ' + toClient + ' toUserId: ' + toUserId + ' message: ' + message + ' toClient: ' + toClient);
@@ -63,10 +70,7 @@ function GroupService(client) {
 			});
 
 			// 通知群友
-			for (var i = memberIds.length - 1; i >= 0; i--) {
-				var memberId = memberIds[i];
-				sendGroupNoti('createGroupNoti', doc, memberId);
-			};
+			sendGroupNotiMemerIds('createGroupNoti', doc, memberIds);
 		});
 	});
 
@@ -139,10 +143,7 @@ function GroupService(client) {
 
 					if (err == null && doc != null) {
 						// 通知群友
-						for (var i = doc.memberIds.length - 1; i >= 0; i--) { 
-							var memberId = doc.memberIds[i];
-							sendGroupNoti('groupInfoUpdateNoti', doc, memberId);
-						};
+						sendGroupNotiMemerIds('groupInfoUpdateNoti', doc, doc.memberIds);
 					};
 				});
 			}
@@ -161,40 +162,56 @@ function GroupService(client) {
 		dbManager.query(groupId, function(err, doc) {
 
 			if (doc) {
-				var members = doc.memberIds;
 
-				if (members.length ) {
-					dbManager.deleteGroup(groupId, function (err, doc) {
-						response.send(client, data.taskId, err, null, 'deleteGroup');
-					});
-				};
+				if (doc.creator != userId) {
+					// 成员离群
+					data.members = [userId];
+					kickGroupMembers(data);
+				}
+				else {
+					// 群主删群
+					var members = doc.memberIds;
 
-				for (var i = members.length - 1; i >= 0; i--) {
-					var memberId = members[i];
-					var queryCount = 0;
-					userDB.query(memberId, function (err, doc) {
-						queryCount++;
-						if (doc) {
-							doc.groupIds.remove(groupId);
-							userDB.update(doc, function	(err, doc) {});
-						}
+					if (members.length ) {
+						dbManager.deleteGroup(groupId, function (err, doc) {
+							response.send(client, data.taskId, err, null, 'deleteGroup');
 
-						if (queryCount == members.length) {
-							dbManager.deleteGroup(groupId, function (err, doc) {
-								response.send(client, data.taskId, err, null, 'deleteGroup');
-							});
-						};
-					});
+							if (err == null && doc != null) {
+								// 通知群友
+								sendGroupNotiMemerIds('deleteGroupNoti', doc, doc.memberIds);
+							};
+						});
+					}
 
-				};
+					for (var i = members.length - 1; i >= 0; i--) {
+						var memberId = members[i];
+						var queryCount = 0;
+						userDB.query(memberId, function (err, doc) {
+							queryCount++;
+							if (doc) {
+								doc.groupIds.remove(groupId);
+								userDB.update(doc, function	(err, doc) {});
+							}
+
+							if (queryCount == members.length) {
+								dbManager.deleteGroup(groupId, function (err, doc) {
+									response.send(client, data.taskId, err, null, 'deleteGroup');
+									if (err == null && doc != null) {
+										// 通知群友
+										sendGroupNotiMemerIds('deleteGroupNoti', doc, doc.memberIds);
+									};
+								});
+							};
+						});
+
+					};
+				}
 			}
 			else {
 				response.send(client, data.taskId, err, null, 'deleteGroup');
 			}
 			
 		});
-
-		
 	});
 
 	client.on('addGroupMembers', function (data) {
@@ -243,16 +260,13 @@ function GroupService(client) {
 					response.send(client, data.taskId, err, null, 'addGroupMembers');
 
 					if (err == null) {
-						for (var i = oldMembers.length - 1; i >= 0; i--) {
-							var memberId = oldMembers[i];
-							sendGroupNoti('groupMembersAddNoti', {
+						// 通知群友
+						sendGroupNotiMemerIds('groupMembersAddNoti', {
 								"groupId" : groupId, 
 								"memberIds" : addMembers,
 								"userId" : userId
-							}, memberId);
-						};
+							}, oldMembers);
 					};
-					
 				});
 			}
 			else { 
@@ -262,6 +276,10 @@ function GroupService(client) {
 	});
 
 	client.on('kickGroupMembers', function (data) {
+		kickGroupMembers(data);
+	});
+
+	function kickGroupMembers(data) {
 		var groupId = data.groupId;
 		var userId = data.userId;
 		var memberIds = data.memberIds;
@@ -287,23 +305,19 @@ function GroupService(client) {
 					response.send(client, data.taskId, err, null, 'kickGroupMembers');
 
 					if (err == null) {
-						for (var i = doc.memberIds.length - 1; i >= 0; i--) {
-							var memberId = doc.memberIds[i];
-							sendGroupNoti('groupMembersDelNoti', {
+						sendGroupNotiMemerIds('groupMembersDelNoti', {
 								"groupId" : groupId, 
 								"memberIds" : memberIds,
 								"userId" : userId
-							}, memberId);
-						};
-					};
-
+							}, doc.memberIds);
+					}
 				});
 			}
 			else { 
 				response.send(client, data.taskId, err, null, 'kickGroupMembers');
 			}
 		});
-	});
+	}
 }
 
 module.exports = GroupService;
