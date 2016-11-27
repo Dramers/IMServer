@@ -37,35 +37,11 @@ function DBManager() {
 			doc.state = state;
 			model.save(callback);
 		});
-	} 
-
-	this.update = function (userModel, callback) {
-		userModel.save(function (err, doc) {
-			callback(err, doc);
-		});
 	}
 
-	this.findOne = function (userId, username, callback) {
-		var searchInfo = {};
-
-		if (userId) { searchInfo.userId = userId};
-		if (username) { searchInfo.username = username};
-
-		UserModel.findOne(searchInfo, function (err, doc) {
-			callback(err, doc);
-		});
-
-	};
-
-	this.searchKeyword = function (keyword, callback) {
-
-		var qs = '/' + keyword + '/';
-		console.log('searchKeyword: ' + qs);
-		UserModel.find({'username': new RegExp(keyword)}, function (err, docs) {
-			console.log('searchKeyword finished: ' + docs.length);
-			callback(err, docs);
-		});
-	};
+	this.queryOneMsg = function (msgId, callback) {
+		MsgModel.fineOne({'msgId' : msgId}, callback);
+	}
 }
 
 module.exports = DBManager;

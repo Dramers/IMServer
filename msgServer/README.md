@@ -61,22 +61,35 @@
 		"taskId" : "",
 		"result" : [
 			{
-		      "fromUserId" : 1,
-		      "toUserId" : 2,
-		      "contentStr" : "",
-		      "msgId" : "",
-		      "sendDate" : 时间戳,
-		      "msgContentType" : "",
-		      "sessionId" : "",
-		    },
+				'labelName' : 'messageStatus',
+				'content' : {
+					"msgId" : "",
+					"state" : 1
+				}
+			},
+			{
+				'labelName' : 'message',
+				'content' : {
+			      "fromUserId" : 1,
+			      "toUserId" : 2,
+			      "contentStr" : "",
+			      "msgId" : "",
+			      "sendDate" : 时间戳,
+			      "msgContentType" : "",
+			      "sessionId" : "",
+			    }
+			},
 		    {
-		      "fromUserId" : 1,
-		      "toUserId" : 2,
-		      "contentStr" : "",
-		      "msgId" : "",
-		      "sendDate" : 时间戳,
-		      "msgContentType" : "",
-		      "sessionId" : "",
+		    	'labelName' : 'groupInfoUpdateNoti',
+		    	'content' : {
+					"groupId" : "",
+					"groupName" : "",
+					"groupHeadImage" : "",
+					"creator" : ""
+					"memberIds" : ["" , "", ...],
+					"updateDate" : 秒时间戳,
+					"createDate" : 秒时间戳
+				}
 		    },
 		    ...
 		]
@@ -94,16 +107,16 @@
 	}
 
 响应:
-	
+​	
 	{
-      	"fromUserId" : 1,
-      	"toUserId" : 2,
-      	"contentStr" : "",
-      	"msgId" : "",
-      	"sendDate" : 时间戳,
-      	"msgContentType" : "",
-      	"sessionId" : "",
-    }
+	  	"fromUserId" : 1,
+	  	"toUserId" : 2,
+	  	"contentStr" : "",
+	  	"msgId" : "",
+	  	"sendDate" : 时间戳,
+	  	"msgContentType" : "",
+	  	"sessionId" : "",
+	}
 
 ##GroupService
 
@@ -339,6 +352,33 @@
 		"createDate" : 秒时间戳
 	}
 
+##消息状态
+
+消息状态有三种, 是整型. **1为服务器已收、2为对方已收、3为对方已读**
+
+###消息状态改变
+
+标签: messageStatus
+请求: 
+
+	{
+		"userId" : "",
+		"msgIds" : ["", "", ...],
+		"state" : 1
+	}
+
+无响应
+
+###消息状态改变通知
+
+标签: messageStatus *(对，你看得没错，就是和上面的标签一样的)*
+报文:
+
+	{
+		"msgId" : "",
+		"state" : 1
+	}
+
 ##数据结构
 ### GroupModel
 
@@ -377,6 +417,8 @@
 | groupIds | [string] | 所在群组Id数组 | yes  |
 
 ### OfflineMsgModel
-| 字段                | 类型     | 描述                    | 能否为空 |
-| :---------------- | :----- | --------------------- | ---- |
-| msgId             | string | 消息Id                  | no   |
+| 字段        | 类型     | 描述                                       | 能否为空 |
+| :-------- | :----- | ---------------------------------------- | ---- |
+| labelName | string | 为回执的标签信息，如: 消息为message，消息状态为messageStatus、群的一些回执 | no   |
+| userId    | Int    | 用户Id                                     | no   |
+| content   | string | 内容 为json字符串, 若不能解析则直接返回字符串               | no   |
