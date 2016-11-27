@@ -136,10 +136,20 @@ function GroupService(client) {
 
 				dbManager.update(doc, function (err, doc) {
 					response.send(client, data.taskId, err, null, 'updateGroupInfo');
+
+					if (err == null && doc != null) {
+						// 通知群友
+						for (var i = doc.memberIds.length - 1; i >= 0; i--) { 
+							var memberId = doc.memberIds[i];
+							sendGroupNoti('groupInfoUpdateNoti', doc, memberId);
+						};
+					};
 				});
 			}
 			else {
 				response.send(client, data.taskId, err, null, 'updateGroupInfo');
+
+
 			}
 		});
 	});
