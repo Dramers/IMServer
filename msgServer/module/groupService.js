@@ -24,6 +24,21 @@ function GroupService(client) {
 	var GroupUserDB = require('./userDB');
 	var userDB = new GroupUserDB();
 
+	var OfflineMsgDB = require('../model/OfflineMsgModel');
+	var offlineMsgDB = new OfflineMsgDB();
+
+	function sendGroupNoti(labelName, message, toUserId) {
+		var toClient = clientInfos.get(toUserId);
+		console.log(' sendGroupNoti: ' + toClient + ' toUserId: ' + toUserId + ' message: ' + message + ' toClient: ' + toClient);
+
+		if (toClient) {
+			toClient.emit(labelName, message);
+		}
+		else {
+			offlineMsgDB.add(labelName, toUserId, message, null);
+		}
+	}
+
 	client.on('createGroup', function (data) {
 		console.log('createGroup' + data.userId);
 		var groupName = data.groupName;
@@ -47,9 +62,12 @@ function GroupService(client) {
 				response.send(client, data.taskId, err, doc, 'createGroup');
 			});
 
+			// 通知群友
+			for (var i = memberIds.length - 1; i >= 0; i--) {
+				var memberId = memberIds[i];
+				sendGroupNoti('createGroupNoti', doc, memberId);
+			};
 		});
-
-		// 通知其他人
 	});
 
 	client.on('queryGroupList', function (data) {
@@ -190,11 +208,14 @@ function GroupService(client) {
 			if (doc) {
 
 				// 去重
+				var oldMembers = [];
+				var addMembers = [];
 				var newMembers = doc.memberIds;
 				for (var i = memberIds.length - 1; i >= 0; i--) {
 					var newID = memberIds[i]; 
 					var have = false;
 					for (var j = doc.memberIds.length - 1; j >= 0; j--) {
+						oldMembers.push(doc.memberIds[j]);
 						if (doc.memberIds[j] == newID) {
 							have = true;
 							break;
@@ -204,11 +225,23 @@ function GroupService(client) {
 					if (have == false) {
 						
 						newMembers.push(newID);
+						addMembers.push(newID);
 					};
 				};
 
 				dbManager.update(doc, function (err, doc) {
 					response.send(client, data.taskId, err, null, 'addGroupMembers');
+
+					if (err == null) {
+						for (var i = oldMembers.length - 1; i >= 0; i--) {
+							var memberId = oldMembers[i];
+							sendGroupNoti('groupMembersAddNoti', {
+								"groupId" : groupId, 
+								"memberIds" : addMembers
+							}, memberId);
+						};
+					};
+					
 				});
 			}
 			else { 
@@ -241,6 +274,17 @@ function GroupService(client) {
 
 				dbManager.update(doc, function (err, doc) {
 					response.send(client, data.taskId, err, null, 'kickGroupMembers');
+
+					if (err == null) {
+						for (var i = doc.memberIds.length - 1; i >= 0; i--) {
+							var memberId = doc.memberIds[i];
+							sendGroupNoti('groupMembersDelNoti', {
+								"groupId" : groupId, 
+								"memberIds" : memberIds
+							}, memberId);
+						};
+					};
+
 				});
 			}
 			else { 
