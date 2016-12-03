@@ -35,8 +35,11 @@ function GroupService(client) {
 	}
 
 	function sendGroupNoti(labelName, message, toUserId) {
+
+		if (toUserId == null) { return };
+
 		var toClient = clientInfos.get(toUserId);
-		console.log(' sendGroupNoti: ' + toClient + ' toUserId: ' + toUserId + ' message: ' + message + ' toClient: ' + toClient);
+		console.log(' sendGroupNoti: ' + labelName + ' client: ' + toClient + ' toUserId: ' + toUserId + ' message: ' + message + ' toClient: ' + toClient);
 
 		if (toClient) {
 			toClient.emit(labelName, message);
@@ -172,7 +175,7 @@ function GroupService(client) {
 					// 群主删群
 					var members = doc.memberIds;
 
-					if (members.length ) {
+					if (members.length == 0) {
 						dbManager.deleteGroup(groupId, function (err, doc) {
 							response.send(client, data.taskId, err, null, 'deleteGroup');
 
@@ -265,7 +268,7 @@ function GroupService(client) {
 								"groupId" : groupId, 
 								"memberIds" : addMembers,
 								"userId" : userId
-							}, oldMembers);
+							}, doc.memberIds);
 					};
 				});
 			}
@@ -305,11 +308,18 @@ function GroupService(client) {
 					response.send(client, data.taskId, err, null, 'kickGroupMembers');
 
 					if (err == null) {
+						// 发送给群成员通知
 						sendGroupNotiMemerIds('groupMembersDelNoti', {
 								"groupId" : groupId, 
 								"memberIds" : memberIds,
 								"userId" : userId
 							}, doc.memberIds);
+						// 发送给被踢的人通知
+						sendGroupNotiMemerIds('groupMembersDelNoti', {
+								"groupId" : groupId, 
+								"memberIds" : memberIds,
+								"userId" : userId
+							}, memberIds);
 					}
 				});
 			}

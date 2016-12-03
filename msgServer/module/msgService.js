@@ -91,7 +91,7 @@ function MsgService(client) {
 		console.log('queryOffline Message1');
 		offlineMsgDB.query(data.userId, function (err, doc) {
 
-			console.log('queryOffline Message');
+			console.log('queryOffline Message length: ' + doc.length);
 			if (err) {
 				response.send(client, data.taskId, err, doc, 'queryOffineMessage');
 				return;
