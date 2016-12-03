@@ -47,14 +47,12 @@ function OfflineMsgModelDB() {
 				for (var i = docs.length - 1; i >= 0; i--) {
 					var offlineMsg = docs[i];
 					var obj = JSON.parse(offlineMsg.content);
-					console.log('Offline Message query obj : ' + obj);
 
 					var newMsg = {
 						"labelName" : offlineMsg.labelName,
 					}
 					if (obj) {
 						newMsg.content = obj;
-						console.log('set obj : ' + offlineMsg.content);
 					}
 					else {
 						newMsg.content = offlineMsg.content;
