@@ -6,6 +6,17 @@
 #-------------------------
 #!/bin/bash
 
-mongod --dbpath /Users/Yalin/WorkSpace/MongoDB/IM/data/db
+#mongooss 服务
+DB_PATH=/Users/Yalin/WorkSpace/MongoDB/IM/data/db
+mongod --dbpath ${DB_PATH}
 
-# gnome-terminal
+cd ./msgServer
+node app.js
+
+cd ..
+cd ./loginServer
+node app.js
+
+cd ..
+cd ./frontServer
+DEBUG=fromtServer* npm start
