@@ -5,18 +5,20 @@
 #-版   本:  V1.0
 #-------------------------
 #!/bin/bash
+export serverpath=`pwd`
+echo $serverpath
 
-#mongooss 服务
-DB_PATH=/Users/Yalin/WorkSpace/MongoDB/IM/data/db
-mongod --dbpath ${DB_PATH}
+#mongoDB
+nohup mongod --dbpath /Users/Yalin/WorkSpace/MongoDB/IM/data/db  &
+ 
+# cd msgServer 
+# ./startserver.sh 
+# cd .. &
 
-cd ./msgServer
-node app.js
+# cd loginServer
+# ./startserver.sh &
+# cd ..
 
-cd ..
-cd ./loginServer
-node app.js
-
-cd ..
-cd ./frontServer
-DEBUG=fromtServer* npm start
+# cd frontServer 
+# ./startserver.sh &
+# cd .. 

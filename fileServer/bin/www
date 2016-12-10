@@ -1,0 +1,12 @@
+#!/usr/bin/env node
+var debug = require('debug')('fileServer');
+var app = require('../app');
+
+var fs = require('fs');
+var config = JSON.parse(fs.readFileSync('server.config', 'utf-8'));
+
+app.set('port', process.env.PORT || config["serverPort"]);
+
+var server = app.listen(app.get('port'), function() {
+  debug('Express server listening on port ' + server.address().port);
+});
